@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: stg_clubs
+    columns:
+      - name: club_id_nr
+        tests: 
+          - unique
+          - not_null
+      - name: club_id
+        tests:
+          - unique
+          - not_null
+      - name: club_title
+        tests:
+          - unique
+          - not_null
+  - name: stg_players
+    columns:
+      - name: player_id
+        tests: 
+          - unique
+          - not_null
+      - name: player_name
+        tests:
+          - not_null
+      - name: position
+        tests:
+          - accepted_values:
+              values: ["Torwart", "Abwehr", "Mittelfeld", "Sturm"]
+      - name: club_id
+        tests:
+          - not_null
+          - relationships:
+              field: club_id
+              to: ref('stg_clubs')
+  - name: stg_market_values
+    columns:
+      - name: market_value_id
+        tests:
+          - not_null
+          - unique
+      - name: player_id
+        tests:
+          - relationships:
+              field: player_id
+              to: ref('stg_players')
+          
+
+
+        
