@@ -83,37 +83,50 @@ models:
           - unique
           - not_null
         description: Club title
-        
+
   - name: stg_players
+    description: Contains all players from every club in the bundesliga. Created from the latest infomration of the refrence table.
     columns:
       - name: player_id
+        description: Player ID
         tests: 
           - unique
           - not_null
       - name: player_name
+        description: Player name
         tests:
           - not_null
       - name: position
+        description: Position in lineup
         tests:
           - accepted_values:
               values: ["Torwart", "Abwehr", "Mittelfeld", "Sturm"]
       - name: club_id
+        description: Club ID
         tests:
           - not_null
           - relationships:
               field: club_id
               to: ref('stg_clubs')
+
   - name: stg_market_values
+    description: Contains for each player for every loading date a market value. 
     columns:
       - name: market_value_id
+        description: UUID market value 
         tests:
           - not_null
           - unique
       - name: player_id
+        description: Player ID
         tests:
           - relationships:
               field: player_id
               to: ref('stg_players')
+      - name: market_value
+        description: Market value
+      - name: loaded_date
+        description: Date when market value was extracted and loaded into db.
           
 
 
