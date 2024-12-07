@@ -1,12 +1,12 @@
-with market_values as(
+WITH market_values AS (
 
-select
-    concat(comstats_data_player_id, '-' ,loaded_date) as market_value_id,
-    comstats_data_player_id as player_id,
+SELECT
+    md5(CONCAT(player_id, '-' ,loaded_date)::text) AS market_value_id,
+    player_id,
     market_value,
     loaded_date
-from {{ source('comunio', 'raw_comunio_players') }}
+FROM {{ref("raw_comunio_players_and_market_values")}}
 
 )
 
-select * from market_values
+SELECT * FROM market_values

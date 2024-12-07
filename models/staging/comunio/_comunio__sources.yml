@@ -2,10 +2,13 @@ version: 2
 
 sources:
   - name: comunio
+    description: A Postgres database containing data from the football manager game Comunio. 
+                It's about setting up your digital team with players from the german Bundesliga. 
     database: mydb
     schema: public
     tables:
       - name: raw_comunio_matches
+        description: '{{doc("raw_comunio_matches")}}'
         freshness:
           warn_after: {count: 7, period: day}
           error_after: {count: 28, period: day}

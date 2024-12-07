@@ -1,16 +1,16 @@
-with market_values as (
-    select 
+WITH market_values AS (
+    SELECT 
         market_value_id,
-        sum(market_value) as total_market_value
-    from {{ ref("stg_market_values")}}
-    group by
+        SUM(market_value) AS total_market_value
+    FROM {{ ref("stg_market_values")}}
+    GROUP BY
         market_value_id
-    having
-        sum(market_value) < 0
+    HAVING
+        SUM(market_value) < 0
 )
 
-select
+SELECT
 *
-from market_values
+FROM market_values
 
 
