@@ -9,11 +9,11 @@ WITH players AS (
 )
 
 SELECT DISTINCT
-    player_id,
-    player_name,
-    position,
-    comunio_profile_url,
-    club_id,
-    loaded_date 
-FROM players
+    players.player_id,
+    players.player_name,
+    players.position,
+    clubs.club_id,
+    players.loaded_date 
+FROM players LEFT JOIN {{ ref('stg_clubs') }} AS clubs
+ON clubs.comunio_club_id = players.club_id
 WHERE row_number = 1

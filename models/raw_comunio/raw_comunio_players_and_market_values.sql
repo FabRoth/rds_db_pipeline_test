@@ -33,10 +33,10 @@ WITH comunio_players AS (
                 loaded_date
         END
         loaded_date
-    from {{source("comunio", "raw_comunio_players")}}
+    FROM {{source("comunio", "raw_comunio_players")}}
 )
 
-select
+SELECT
         club_id,
         club_title,
         position,
@@ -55,4 +55,4 @@ select
         trend,
         CAST(loaded_date AS TIMESTAMP) AS loaded_date
 
-from comunio_players
+FROM comunio_players

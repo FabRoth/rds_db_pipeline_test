@@ -1,0 +1,125 @@
+version: 2
+
+models:
+  - name: raw_comunio_players_and_market_values
+    tests: 
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - player_id
+            - loaded_date
+    description: A copy of the raw data of comunio players and their clubs, performance data and market values for each day. 
+                A row contains one player per day. Data types are checked and changed and first tests for data consistancy is made. 
+    columns:
+      - name: club_id
+        tests:
+          - not_null
+        description: Club ID
+      - name: club_title
+        tests:
+          - not_null
+        description: Club Title
+      - name: position
+        tests:
+          - not_null
+          - accepted_values:
+              values: ["Torwart", "Abwehr", "Mittelfeld", "Sturm"]
+        description: Position in lineup. 
+      - name: player_id
+        tests:
+          - not_null
+        description: Player ID
+      - name: comunio_profile_url
+        description: URL to Player Profile
+      - name: player_name
+        tests:
+          - not_null
+        description: Player name
+      - name: points
+        description: All points a player earned so far in all rated matches.
+      - name: matches_played
+        description: Played matches
+      - name: matches_rated
+        description: Rated matches of the played ones. Some events has to happen that a played match is rated. For example a player has to be on the pitch for a few minutes to be able rate his perfomance.
+      - name: points_per_match
+        description: Average of earned points and rated matches till this day.
+      - name: shots
+        description: Shots a player did in rated matches till this day.
+      - name: shots_on_target
+        description: Shots on target
+      - name: passing_accuracy_percentage
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0.0
+              max_value: 100.0
+        description: Passing accuracy for all rated matches till this day
+      - name: tackling_success_rate_percentage 
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0.0
+              max_value: 100.0
+        description: Tackling accuracy for all rated matches till this day
+      - name: market_value
+        description: The market value of the player on this day.
+      - name: trend
+        description: Trend of the market value
+      - name: loaded_date
+        description: Datetime the observation was loaded into the database.
+
+  - name: raw_comunio_matchday_matches
+    description: Contains history of played and upcoming matchdays. It's a copy of the extracted matchday data from comunio. Transformed into the wanted data types and tested for data consitency.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - match_id
+            - loaded_date
+    columns:
+      - name: matchday
+        description: Number of matchday
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 34
+      - name: matchday_date
+        description: Date the match is played.
+        tests:
+          - not_null 
+      - name: match_id  
+        tests:
+          - not_null
+      - name: kickoff_time
+        description: Time the kick off is scheduled. Only known for upcomin matches and alwalys null for played matches. 
+      - name: home_club_id
+        description: Home Team's Club ID 
+        tests:
+          - not_null
+      - name: away_club_id
+        description: Away Team's Club ID 
+        tests:
+          - not_null
+      - name: home_club_title
+        description: Home Club Title
+        tests:
+          - not_null
+      - name: away_club_title
+        description: Away Club Title
+        tests:
+          - not_null
+      - name: goals_home
+        description: Goals scored by the home team. Contains data only if a matches is played otherwise its null.
+      - name: goals_away
+        description: Goals scored by the away team. Contains data only if a matches is played otherwise its null.
+      - name: expected_goals_home
+        description: Expected goals by the home team. Contains data only if a matches is played otherwise its null.
+      - name: expected_goals_away
+        description: Expected goals scored by the away team. Contains data only if a matches is played otherwise its null.
+      - name: match_status
+        description: Match status
+        tests:
+          - accepted_values:
+              values: ["upcoming", "finished"]
+      - name: loaded_date
+        description: Datetime the observation was loaded into the database.
+              
+
+
